@@ -81,29 +81,15 @@ classDiagram
 ```mermaid
 flowchart LR
     FE["Frontend"] <--> GW["API Gateway<br/>:8080"]
+    GW <--> EU["Service Registry<br/>Eureka Server<br/>:8761"]
 
-    subgraph INFRA["Infrastructure Spring Cloud"]
-        EU["Eureka Server<br/>:8761"]
-    end
+    GW --> CAT["service-catalogue<br/>:8081"]
+    GW --> STK["service-stock<br/>:8082"]
+    GW --> CMD["service-commande<br/>:8083"]
 
-    subgraph METIER["Services métier"]
-        CAT["service-catalogue<br/>:8081"]
-        STK["service-stock<br/>:8082"]
-        CMD["service-commande<br/>:8083"]
-    end
-
-    GW --> CAT
-    GW --> STK
-    GW --> CMD
-
-    GW -.->|découverte| EU
-    CAT -.->|enregistrement| EU
-    STK -.->|enregistrement| EU
-    CMD -.->|enregistrement| EU
-
-    CAT --- DB1[("H2")]
-    STK --- DB2[("H2")]
-    CMD --- DB3[("H2")]
+    CAT --- DB1[("PostgreSQL<br/>catalogue_db")]
+    STK --- DB2[("PostgreSQL<br/>stock_db")]
+    CMD --- DB3[("PostgreSQL<br/>commande_db")]
 ```
 
 | Application | Rôle | Port |
