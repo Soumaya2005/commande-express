@@ -76,3 +76,40 @@ classDiagram
     Stock ..> Product : référence par productId
     Order ..> Stock : dépend de
 ```
+## Architecture
+
+```mermaid
+flowchart LR
+    FE["Frontend"] <--> GW["API Gateway<br/>:8080"]
+
+    subgraph INFRA["Infrastructure Spring Cloud"]
+        EU["Eureka Server<br/>:8761"]
+    end
+
+    subgraph METIER["Services métier"]
+        CAT["service-catalogue<br/>:8081"]
+        STK["service-stock<br/>:8082"]
+        CMD["service-commande<br/>:8083"]
+    end
+
+    GW --> CAT
+    GW --> STK
+    GW --> CMD
+
+    GW -.->|découverte| EU
+    CAT -.->|enregistrement| EU
+    STK -.->|enregistrement| EU
+    CMD -.->|enregistrement| EU
+
+    CAT --- DB1[("H2")]
+    STK --- DB2[("H2")]
+    CMD --- DB3[("H2")]
+```
+
+| Application | Rôle | Port |
+|---|---|---|
+| api-gateway | Point d'entrée unique, routage | 8080 |
+| eureka-server | Registre des services | 8761 |
+| service-catalogue | Référentiel des produits | 8081 |
+| service-stock | Niveaux de stock | 8082 |
+| service-commande | Cycle de vie des commandes | 8083 |
