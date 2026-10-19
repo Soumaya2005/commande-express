@@ -13,3 +13,66 @@ L'application est composée de trois services métier :
 - **service-stock** : suivi des niveaux de stock
 
 Technologies : Java 17, Spring Boot, Maven, Spring Cloud (Eureka, Gateway, OpenFeign), Resilience4j, Kafka.
+
+## Diagramme de classes
+
+```mermaid
+classDiagram
+    direction LR
+
+    namespace service_catalogue {
+        class Product {
+            Long id
+            String nom
+            BigDecimal prix
+            String description
+            String categorie
+            StatutProduit statut
+        }
+        class StatutProduit {
+            <<enumeration>>
+            DISPONIBLE
+            RUPTURE_PROCHE
+        }
+    }
+
+    namespace service_commande {
+        class Order {
+            Long id
+            String clientEmail
+            LocalDateTime date
+            StatutCommande statut
+            BigDecimal montantTotal
+        }
+        class OrderLine {
+            Long id
+            Long orderId
+            Long productId
+            int quantite
+            BigDecimal prixUnitaire
+        }
+        class StatutCommande {
+            <<enumeration>>
+            EN_ATTENTE_STOCK
+            CONFIRMEE
+            ANNULEE
+        }
+    }
+
+    namespace service_stock {
+        class Stock {
+            Long id
+            Long productId
+            int quantite
+            int seuilAlerte
+        }
+    }
+
+    Order "1" *-- "1..*" OrderLine : contient
+    Order --> StatutCommande : statut
+    Product --> StatutProduit : statut
+
+    OrderLine ..> Product : référence par productId
+    Stock ..> Product : référence par productId
+    Order ..> Stock : dépend de
+```
