@@ -12,7 +12,7 @@ L'application est composée de trois services métier :
 - **service-commande** : passage et cycle de vie des commandes (service principal)
 - **service-stock** : suivi des niveaux de stock
 
-Technologies : Java 17, Spring Boot, Maven, Spring Cloud (Eureka, Gateway, OpenFeign), Resilience4j, Kafka.
+Technologies : Java 21, Spring Boot, Maven, Spring Cloud (Eureka, Gateway, OpenFeign), Resilience4j, Kafka.
 
 ## Diagramme de classes
 
